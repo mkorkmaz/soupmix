@@ -1,0 +1,25 @@
+{
+    "name": "mkorkmaz/db_adabters",
+    "type": "library",
+    "description": "Simple PHP database adapters to handle low level CRUD operations.",
+    "keywords": ["database","adapters","mongodb"],
+    "homepage": "https://github.com/mkorkmaz/db_adabters",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mehmet Korkmaz",
+            "email": "mehmet@mkorkmaz.com",
+            "homepage": "https://mkorkmaz.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "ext-mongodb": "^1.1.0",
+        "mongodb/mongodb": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DataStore\\Adapters": "src"
+        }
+    }
+}
