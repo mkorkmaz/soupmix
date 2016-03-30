@@ -128,7 +128,6 @@ class MongoDB {
 	private static function build_filter($filter){
 
 		$filters = [];
-		$prev_key='';
 		foreach ($filter as $key=>$value){
 			if(strpos($key,"__")!==false){
 				preg_match('/__(.*?)$/i',$key, $matches );
@@ -142,7 +141,6 @@ class MongoDB {
 			else{
 				$filters[$key] = $value;
 			}
-			$prev_key=$key;
 		}
 		
 		return $filters;
