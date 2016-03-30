@@ -12,59 +12,66 @@ namespace DataStore\Adapters;
 class MongoDB {
 	
 	private $conn = null;
+	
+	private $db_name = null;
+	
+	private $db = null;
 
 	public function __construct($config){
+		$this->db_name = $config['db_name'];
 		$this->connect($config);
 	}
 	
 	private function connect($config){
 		$this->conn = new \MongoDB\Client($config['connection_string'], $config['options']);
+		$this->db =$this->conn->{$this->db_name};
 	}
 	
 	public function insert($collection, $values){
 		
-		list($dbname, $collection) = explode("/", $collection);
-		$result = $this->conn->$dbname->$collection->insertOne($values);
+		$collection = $this->db->selectCollection($collection);
+		$result = $collection->insertOne($values);
 		return $result->getInsertedId();
 	}
 
 	public function get($collection, $id){
 		
-		list($dbname, $collection) = explode("/", $collection);
+		$collection = $this->db->selectCollection($collection);
 		$filter = ['_id'=> new \MongoDB\BSON\ObjectID($id)];
 		$options = [
 			'typeMap'=>['root' => 'array', 'document' => 'array']
 		];
-		return $this->conn->$dbname->$collection->findOne( $filter,$options );
+		return $collection->findOne( $filter,$options );
 	}
 
 	public function update($collection, $filter, $values){
-	
-		list($dbname ,$collection) = explode("/", $collection);
+		
+		$collection = $this->db->selectCollection($collection);
 		$values_set = [ '$set' => $values ];
 		if(isset($filter['_id'])){
 			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['_id']);
 		}
-		return $this->conn->$dbname->$collection->updateMany( $filter, $values_set );
+		return $collection->updateMany( $filter, $values_set );
 	}
 
 	public function delete($collection, $filter){
 		
-		list($dbname, $collection) = explode("/", $collection);
+		$collection = $this->db->selectCollection($collection);
 		if(isset($filter['_id'])){
 			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['_id']);
 		}
-		return $this->conn->$dbname->$collection->deleteMany( $filter );
+		return $collection->deleteMany( $filter );
 	}
 
 	public function find($collection, $filter, $fields=null, $sort=null, $start=0, $limit=25){
-
-		list($dbname, $collection) = explode("/",$collection);		
+		
+		$collection = $this->db->selectCollection($collection);
 		if(isset($filter['_id'])){
 			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['_id']);
 		}
 		$filter = MongoDB::build_filter($filter);
-		$count = $this->conn->$dbname->$collection->count($filter);
+		var_dump($filter);
+		$count = $collection->count($filter);
 		if($count > 0){
 			$results =[];
 			$options=[
@@ -85,8 +92,7 @@ class MongoDB {
 				}
 				$options['sort']=$sort;
 			}
-			
-			$cursor = $this->conn->$dbname->$collection->find($filter,$options);
+			$cursor = $collection->find($filter,$options);
 			$iterator = new \IteratorIterator($cursor);
 			$iterator->rewind();
 			while($doc = $iterator->current()){
@@ -107,17 +113,23 @@ class MongoDB {
 	private static function build_filter($filter){
 
 		$filters = [];
+		$prev_key='';
 		foreach ($filter as $key=>$value){
-			if(strpos($key,"__")!==FALSE){
+			if(strpos($key,"__")!==false){
 				preg_match('/__(.*?)$/i',$key, $matches );
 				$operator = $matches[1];
 				$key = str_replace($matches[0], "", $key);
-				$filters[$key]=[ '$'.$operator => $value];
+				$filters[$key]['$'.$operator]=$value;
+			}
+			else if(strpos($key,"__")===false && is_array($value)){
+				$filters['$or'] = [MongoDB::build_filter($value)];
 			}
 			else{
 				$filters[$key] = $value;
 			}
+			$prev_key=$key;
 		}
+		
 		return $filters;
 	}
 }
