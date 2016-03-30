@@ -31,7 +31,13 @@ class MongoDB {
 		
 		$collection = $this->db->selectCollection($collection);
 		$result = $collection->insertOne($values);
-		return $result->getInsertedId();
+		$id = $result->getInsertedId();
+		if(is_object($id)){
+			return (string) $id;
+		}
+		else{
+			return null;
+		}
 	}
 
 	public function get($collection, $id){
@@ -41,17 +47,23 @@ class MongoDB {
 		$options = [
 			'typeMap'=>['root' => 'array', 'document' => 'array']
 		];
-		return $collection->findOne( $filter,$options );
+		$result = $collection->findOne($filter, $options);
+		if($result!==null){
+			$result['_id'] = (string) $result['_id'];
+		}
+		return $result;
 	}
 
 	public function update($collection, $filter, $values){
 		
 		$collection = $this->db->selectCollection($collection);
+		$filter = MongoDB::build_filter($filter);
 		$values_set = [ '$set' => $values ];
 		if(isset($filter['_id'])){
 			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['_id']);
 		}
-		return $collection->updateMany( $filter, $values_set );
+		$result = $collection->updateMany( $filter, $values_set );
+		return $result->getModifiedCount();
 	}
 
 	public function delete($collection, $filter){
@@ -60,7 +72,8 @@ class MongoDB {
 		if(isset($filter['_id'])){
 			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['_id']);
 		}
-		return $collection->deleteMany( $filter );
+		$result = $collection->deleteMany($filter);
+		return $result->getDeletedCount();
 	}
 
 	public function find($collection, $filter, $fields=null, $sort=null, $start=0, $limit=25){
@@ -70,7 +83,6 @@ class MongoDB {
 			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['_id']);
 		}
 		$filter = MongoDB::build_filter($filter);
-		var_dump($filter);
 		$count = $collection->count($filter);
 		if($count > 0){
 			$results =[];
@@ -96,6 +108,9 @@ class MongoDB {
 			$iterator = new \IteratorIterator($cursor);
 			$iterator->rewind();
 			while($doc = $iterator->current()){
+				if(isset($doc['_id'])){
+					$doc['_id'] = (string) $doc['_id'];
+				}
  				$results[]=$doc;
  				$iterator->next();
 			}
