@@ -2,7 +2,7 @@
     "name": "mkorkmaz/db_adapters",
     "type": "library",
     "description": "Simple PHP database adapters to handle low level CRUD operations.",
-    "keywords": ["database","adapters","mongodb"],
+    "keywords": ["database","adapters","mongodb","elasticsearch"],
     "homepage": "https://github.com/mkorkmaz/db_adabters",
     "license": "MIT",
     "authors": [

@@ -133,6 +133,8 @@ class MongoDB {
 				preg_match('/__(.*?)$/i',$key, $matches );
 				$operator = $matches[1];
 				$key = str_replace($matches[0], "", $key);
+			
+				
 				$filters[$key]['$'.$operator]=$value;
 			}
 			else if(strpos($key,"__")===false && is_array($value)){
