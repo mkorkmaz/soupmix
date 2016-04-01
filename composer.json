@@ -1,9 +1,9 @@
 {
-    "name": "mkorkmaz/db_adapters",
+    "name": "mkorkmaz/soupmix",
     "type": "library",
     "description": "Simple PHP database adapters to handle low level CRUD operations.",
     "keywords": ["database","adapters","mongodb","elasticsearch"],
-    "homepage": "https://github.com/mkorkmaz/db_adabters",
+    "homepage": "https://github.com/mkorkmaz/soupmix",
     "license": "MIT",
     "authors": [
         {
