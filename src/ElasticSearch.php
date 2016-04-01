@@ -1,9 +1,5 @@
 <?php
 
-/*
- * 
- *	TODO: Documentation 
- */
 
 
 namespace DataStore\Adapters;
@@ -11,7 +7,7 @@ namespace DataStore\Adapters;
 
 class ElasticSearch {
 	
-	private $conn = null;
+	public $conn = null;
 	
 	private $index = null;
 

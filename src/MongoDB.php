@@ -1,17 +1,12 @@
 <?php
 
-/*
- * 
- *	TODO: Documentation 
- */
-
 
 namespace DataStore\Adapters;
 
 
 class MongoDB {
 	
-	private $conn = null;
+	public $conn = null;
 	
 	private $db_name = null;
 	
