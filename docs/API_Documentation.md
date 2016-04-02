@@ -121,10 +121,3 @@ To satisfy querying options we use some special keywords that will be used in fi
 
 
 **wildchard**: It filters the field that has values that matches with the value specified. For multiple characters use * and for a single character use ? for the filter value. (ie: ['full\_name':"J*Doe"] filters the documents with the full\_name have John Doe, Jack Doe, Jane Doe. ['full\_name':"J?ck Doe"] filters the documents with the full_name has Jack Doe). It's "LIKE % " expression in SQL.  For Elasticsearch, [this field must be defined not analysed](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-wildcard-query.html) to work  properly.
-
-
-
-
-
-
-...
