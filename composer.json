@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "DataStore\\Adapters\\": "src/"
+            "Soupmix\\Adapters\\": "src/"
         }
     }
 }

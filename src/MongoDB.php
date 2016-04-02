@@ -1,7 +1,7 @@
 <?php
 
 
-namespace DataStore\Adapters;
+namespace Soupmix\Adapters;
 
 
 class MongoDB {

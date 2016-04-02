@@ -1,4 +1,4 @@
-# DB Adapters
+# Soupmix
 
 ## Connect
 
@@ -12,7 +12,7 @@ $adapter_config = [];
 $adapter_config['db_name'] ='db_name';
 $adapter_config['connection_string']="mongodb://127.0.0.1";
 $adapter_config['options'] =[];
-$m=new DataStore\Adapters\MongoDB($adapter_config);
+$m=new Soupmix\Adapters\MongoDB($adapter_config);
 ```
 
 ### Elasticsearch
@@ -26,7 +26,7 @@ $adapter_config['db_name'] 	= 'index_name';
 $adapter_config['hosts']	= ["127.0.0.1:9200"];
 $adapter_config['options'] 	= [];
 
-$e=new DataStore\Adapters\ElasticSearch($adapter_config);
+$e=new Soupmix\Adapters\ElasticSearch($adapter_config);
 
 ```
 ## Insert

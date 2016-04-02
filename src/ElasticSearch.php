@@ -2,7 +2,7 @@
 
 
 
-namespace DataStore\Adapters;
+namespace Soupmix\Adapters;
 
 
 class ElasticSearch {
