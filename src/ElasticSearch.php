@@ -154,7 +154,7 @@ class ElasticSearch {
 				]
 			]
 		];
-		var_dump($params);
+		var_dump($filters);
 		$count =  $this->conn->count( $params );
 		if($fields !== null){
 			$params['fields'] = implode(",", $fields);
@@ -186,7 +186,14 @@ class ElasticSearch {
 		else{
 			$result = array();
 			foreach ($return['hits']['hits'] as $item){
+				
+				if($return_type=='fields'){
+					foreach ($item[$return_type]as $k=>$v){
+						$item[$return_type][$k]=$v[0];
+					}
+				}
 				$item[$return_type]['_id']= $item['_id'];
+				
 				$result[]=$item[$return_type];
 			}
 			return ['total' => $count['count'], 'data' => $result];
@@ -236,7 +243,6 @@ class ElasticSearch {
 								
 								break;
 							case 'BooleanQueryLevel':
-								
 								switch ($operator){
 									case 'not':
 										$filters['must_not'][] = ["term" => [$key=> $value]];
@@ -246,7 +252,7 @@ class ElasticSearch {
 							case 'special':
 								switch ($operator){
 									case'in':
-										$filters['must'.$is_not][] = ['terms' => [$key=> $value]];
+										$filters['must'.$is_not][] = ['terms' => [$key=>$value]];
 										break;
 								}
 								break;
