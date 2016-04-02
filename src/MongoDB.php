@@ -78,7 +78,7 @@ class MongoDB {
 			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['_id']);
 		}
 		$filter = ['$and'=>MongoDB::build_filter($filter)];
-		
+		var_dump($filter);
 		$count = $collection->count($filter);
 		if($count > 0){
 			$results =[];
@@ -131,21 +131,24 @@ class MongoDB {
 				$operator = $matches[1];
 				
 				switch ($operator){
-					case 'not':
-						$operator = 'ne';
-					break;case '!in':
+					case '!in':
 						$operator = 'nin';
 						break;
+					case 'not':
+						$operator = 'ne';
+						break;
+					case 'wildcard':
+						$operator = 'regex';
+						$value = str_replace(array("?"),array("."),$value);
+						break;
+					case 'prefix':
+						$operator = 'regex';
+						$value = $value."*";	
+						break;
 				}
-				
-				
 				$key = str_replace($matches[0], "", $key);
 				
-				
-				$filters[]=[$key=>['$'.$operator=>$value]];
-				
-				
-				
+				$filters[]=[$key=>['$'.$operator=>$value ]];
 			}
 			else if(strpos($key,"__")===false && is_array($value)){
 				$filters[]['$or'] = MongoDB::build_filter($value);
