@@ -77,7 +77,8 @@ class MongoDB {
 		if(isset($filter['_id'])){
 			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['_id']);
 		}
-		$filter = MongoDB::build_filter($filter);
+		$filter = ['$and'=>MongoDB::build_filter($filter)];
+		
 		$count = $collection->count($filter);
 		if($count > 0){
 			$results =[];
@@ -123,21 +124,36 @@ class MongoDB {
 	private static function build_filter($filter){
 
 		$filters = [];
+		$previous_key = "";
 		foreach ($filter as $key=>$value){
 			if(strpos($key,"__")!==false){
 				preg_match('/__(.*?)$/i',$key, $matches );
 				$operator = $matches[1];
-				$key = str_replace($matches[0], "", $key);
-			
 				
-				$filters[$key]['$'.$operator]=$value;
+				switch ($operator){
+					case 'not':
+						$operator = 'ne';
+					break;case '!in':
+						$operator = 'nin';
+						break;
+				}
+				
+				
+				$key = str_replace($matches[0], "", $key);
+				
+				
+				$filters[]=[$key=>['$'.$operator=>$value]];
+				
+				
+				
 			}
 			else if(strpos($key,"__")===false && is_array($value)){
-				$filters['$or'] = [MongoDB::build_filter($value)];
+				$filters[]['$or'] = MongoDB::build_filter($value);
 			}
 			else{
-				$filters[$key] = $value;
+				$filters[][$key] = $value;
 			}
+			$previous_key = $key;
 		}
 		
 		return $filters;

@@ -306,6 +306,6 @@ class ElasticSearch {
 			}
 			$prev_key=$key;
 		}
-		return $filters;
+		return $filters; 
 	}
 }

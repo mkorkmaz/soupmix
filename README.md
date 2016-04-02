@@ -1,6 +1,6 @@
 # Soupmix
 
-Simple PHP low level database adapters to handle CRUD operations. This library does not provide any ORM or ODM. 
+Simple PHP low level database adapters collection to handle CRUD operations. This library does not provide any ORM or ODM. 
 
 ## Adapters
 
