@@ -20,6 +20,22 @@ class ElasticSearch {
 		$this->conn = \Elasticsearch\ClientBuilder::create()->setHosts($config['hosts'])->build();
 	}
 	
+	public function create($collection,$config){
+	
+	}
+	
+	public function drop($collection,$config){
+	
+	}
+	
+	public function truncate($collection,$config){
+	
+	}
+	
+	public function set_indexes($collection,$config){
+	
+	}
+		
 	public function insert($collection, $values){
 		
 		$params = [];
@@ -154,7 +170,6 @@ class ElasticSearch {
 				]
 			]
 		];
-		var_dump($filters);
 		$count =  $this->conn->count( $params );
 		if($fields !== null){
 			$params['fields'] = implode(",", $fields);

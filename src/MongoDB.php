@@ -10,7 +10,7 @@ class MongoDB {
 	
 	private $db_name = null;
 	
-	private $db = null;
+	public $db = null;
 
 	public function __construct($config){
 		$this->db_name = $config['db_name'];
@@ -20,6 +20,25 @@ class MongoDB {
 	private function connect($config){
 		$this->conn = new \MongoDB\Client($config['connection_string'], $config['options']);
 		$this->db =$this->conn->{$this->db_name};
+	}
+	
+	public function create($collection, $config){
+		return $this->db->createCollection($collection);
+	}
+	
+	public function drop($collection, $config){
+		return $this->db->dropCollection($collection);		
+	}
+
+	public function truncate($collection, $config){
+		
+		$this->db->dropCollection($collection);
+		return $this->db->createCollection($collection);
+	}
+	
+	public function create_indexes($collection, $indexes){
+		$collection = $this->db->selectCollection($collection);
+		return $collection->createIndexes($indexes);
 	}
 	
 	public function insert($collection, $values){
@@ -50,12 +69,12 @@ class MongoDB {
 	}
 
 	public function update($collection, $filter, $values){
-		
 		$collection = $this->db->selectCollection($collection);
-		$filter = MongoDB::build_filter($filter);
+		$filter = MongoDB::build_filter($filter)[0];
 		$values_set = [ '$set' => $values ];
-		if(isset($filter['_id'])){
-			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['_id']);
+		if(isset($filter['id'])){
+			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['id']);
+			unset($filter['id']);
 		}
 		$result = $collection->updateMany( $filter, $values_set );
 		return $result->getModifiedCount();
@@ -64,21 +83,23 @@ class MongoDB {
 	public function delete($collection, $filter){
 		
 		$collection = $this->db->selectCollection($collection);
-		if(isset($filter['_id'])){
-			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['_id']);
+		$filter = MongoDB::build_filter($filter)[0];
+		if(isset($filter['id'])){
+			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['id']);
+			unset($filter['id']);
 		}
 		$result = $collection->deleteMany($filter);
 		return $result->getDeletedCount();
 	}
 
-	public function find($collection, $filter, $fields=null, $sort=null, $start=0, $limit=25){
+	public function find($collection, $filter, $fields=null, $sort=null, $start=0, $limit=25, $debug=false){
 		
 		$collection = $this->db->selectCollection($collection);
-		if(isset($filter['_id'])){
-			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['_id']);
+		if(isset($filter['id'])){
+			$filter['_id'] = new \MongoDB\BSON\ObjectID($filter['id']);
+			unset($filter['id']);
 		}
 		$filter = ['$and'=>MongoDB::build_filter($filter)];
-		var_dump($filter);
 		$count = $collection->count($filter);
 		if($count > 0){
 			$results =[];
@@ -90,6 +111,9 @@ class MongoDB {
 			if($fields !== null){
 				$projection = [];
 				foreach ($fields as $field){
+					if($field=='id'){
+						$field = '_id';
+					}
 					$projection[$field]=true;
 				}
 				$options['projection']=$projection;
@@ -105,7 +129,7 @@ class MongoDB {
 			$iterator->rewind();
 			while($doc = $iterator->current()){
 				if(isset($doc['_id'])){
-					$doc['_id'] = (string) $doc['_id'];
+					$doc['id'] = (string) $doc['_id'];
 				}
  				$results[]=$doc;
  				$iterator->next();
