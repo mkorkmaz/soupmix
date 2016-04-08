@@ -18,14 +18,14 @@ Simple PHP low level database adapters collection to handle CRUD operations. Thi
 It's recommended that you use [Composer](https://getcomposer.org/) to install Soupmix.
 
 ```bash
-$ composer require mkorkmaz/soupmix ">=0.2.4"
+$ composer require  --prefer-dist mkorkmaz/soupmix "*"
 ```
 
 This will install Soupmix and all required dependencies. Soupmix requires PHP 5.4.0 or newer, mongodb extension: 1.1.0 or newer, [mongo-php-library](https://github.com/mongodb/mongo-php-library) library  or newer form MongoDB, [elasticsearch-php](https://github.com/elastic/elasticsearch-php) library  or newer for Elasticsearch
 
 ## Documentation
 
-[API Documentation](https://github.com/mkorkmaz/db_adapters/blob/master/docs/API_Documentation.md): See details about the db apdapters functions: 
+[API Documentation](https://github.com/mkorkmaz/soupmix/blob/master/docs/API_Documentation.md): See details about the db adapters functions:
 
 ## Usage
 ```
