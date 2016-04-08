@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Soupmix\Adapters;
-
 
 class MongoDB {
 	
@@ -63,7 +61,8 @@ class MongoDB {
 		];
 		$result = $collection->findOne($filter, $options);
 		if($result!==null){
-			$result['_id'] = (string) $result['_id'];
+			$result['id'] = (string) $result['_id'];
+			unset($result['_id']);
 		}
 		return $result;
 	}
@@ -130,6 +129,7 @@ class MongoDB {
 			while($doc = $iterator->current()){
 				if(isset($doc['_id'])){
 					$doc['id'] = (string) $doc['_id'];
+					unset($doc['_id']);
 				}
  				$results[]=$doc;
  				$iterator->next();
