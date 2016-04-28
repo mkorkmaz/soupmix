@@ -1,5 +1,9 @@
 # Soupmix
 
+
+[![Latest Stable Version](https://poser.pugx.org/mkorkmaz/soupmix/v/stable)](https://packagist.org/packages/mkorkmaz/soupmix) [![Total Downloads](https://poser.pugx.org/mkorkmaz/soupmix/downloads)](https://packagist.org/packages/mkorkmaz/soupmix) [![Latest Unstable Version](https://poser.pugx.org/mkorkmaz/soupmix/v/unstable)](https://packagist.org/packages/mkorkmaz/soupmix) [![License](https://poser.pugx.org/mkorkmaz/soupmix/license)](https://packagist.org/packages/mkorkmaz/soupmix)
+
+
 Simple PHP low level database adapters collection to handle CRUD operations. This library does not provide any ORM or ODM. 
 
 ## Adapters
