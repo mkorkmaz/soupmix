@@ -161,17 +161,17 @@ class ElasticSearch {
         $params['index']= $this->index;
         $params['type'] = $collection;
         if($filters!==null) {
-            $filters = ElasticSearch::build_filter($filter);
-
-        $params['body'] = [
-            'query'    => [
-                'filtered' => [
-                    'filter' =>    [
-                        'bool' => $filters
+            $filters = ElasticSearch::build_filter($filters);
+            $params['body'] = [
+                'query'    => [
+                    'filtered' => [
+                        'filter' =>    [
+                            'bool' => $filters
+                        ]
                     ]
                 ]
-            ]
-        ];}
+            ];
+        }
         $count =  $this->conn->count( $params );
         if($fields !== null){
             $params['fields'] = implode(",", $fields);

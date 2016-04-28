@@ -4,7 +4,7 @@ namespace Soupmix\Adapters;
 
 class MongoDB {
 
-    
+
     public $conn = null;
     
     private $db_name = null;
@@ -126,6 +126,10 @@ class MongoDB {
             if($sort !== null){
                 foreach ($sort as $sort_key=> $sort_dir){
                     $sort[$sort_key]=($sort_dir=="desc")?-1:1;
+                    if($sort_key == 'id'){
+                        $sort['_id'] = $sort[$sort_key];
+                        unset($sort['id']);
+                    }
                 }
                 $options['sort']=$sort;
             }
