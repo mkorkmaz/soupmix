@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "ext-mongodb": "^1.1.0",
+        "ext-mongodb": "^1.0.0",
         "mongodb/mongodb": "^1.0.0",
         "elasticsearch/elasticsearch": "~2.0"
     },

@@ -3,8 +3,7 @@
 namespace Soupmix\Adapters;
 
 class MongoDB {
-
-
+    
     public $conn = null;
     
     private $db_name = null;
