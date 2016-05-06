@@ -17,9 +17,6 @@
         "mongodb/mongodb": "^1.0.2",
         "elasticsearch/elasticsearch": "~2.0"
     },
-    "suggest": {
-        "monolog/monolog": "Allows more advanced logging of the application flow"
-    }
     "autoload": {
         "psr-4": {
             "Soupmix\\Adapters\\": "src/"
