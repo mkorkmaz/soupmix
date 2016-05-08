@@ -48,7 +48,7 @@ class ElasticSearch implements Base
             } else {
                 return;
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return;
         }
     }
@@ -91,7 +91,7 @@ class ElasticSearch implements Base
                 if ($return['_shards']['successful'] == 1) {
                     ++$modified_count;
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // should we throw exception? Probably not.
             }
         }
