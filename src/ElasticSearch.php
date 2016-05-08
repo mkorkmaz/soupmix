@@ -109,7 +109,6 @@ class ElasticSearch implements Base
             try {
                 $result = $this->conn->delete($params);
             } catch (\Exception $e) {
-                $code = $e->getCode();
                 return 0;
             }
             if ($result['found']) {
@@ -129,7 +128,6 @@ class ElasticSearch implements Base
                 try {
                     $result = $this->conn->delete($params);
                 } catch (\Exception $e) {
-                    $code = $e->getCode();
                     return 0;
                 }
                 if ($result['found']) {
