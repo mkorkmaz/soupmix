@@ -167,7 +167,6 @@ class MongoDB implements Base
     public static function buildFilter($filter)
     {
         $filters = [];
-        $previous_key = '';
         foreach ($filter as $key => $value) {
             if (strpos($key, '__') !== false) {
                 preg_match('/__(.*?)$/i', $key, $matches);
@@ -196,7 +195,6 @@ class MongoDB implements Base
             } else {
                 $filters[][$key] = $value;
             }
-            $previous_key = $key;
         }
 
         return $filters;

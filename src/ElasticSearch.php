@@ -110,10 +110,6 @@ class ElasticSearch implements Base
                 $result = $this->conn->delete($params);
             } catch (\Exception $e) {
                 $code = $e->getCode();
-                if ($code == 404) {
-                    // @TODO: Should we throw exception for the attempts to delete not exists values?
-                }
-
                 return 0;
             }
             if ($result['found']) {
@@ -124,7 +120,6 @@ class ElasticSearch implements Base
             $params['index'] = $this->index;
             $params['type'] = $collection;
             $params['fields'] = '_id';
-
             $result = $this->find('users', $filter, ['_id'], null, 0, 1);
             if ($result['total'] == 1) {
                 $params = [];
@@ -135,10 +130,6 @@ class ElasticSearch implements Base
                     $result = $this->conn->delete($params);
                 } catch (\Exception $e) {
                     $code = $e->getCode();
-                    if ($code == 404) {
-                        // @TODO: Should we throw exception for the attempts to delete not exists values?
-                    }
-
                     return 0;
                 }
                 if ($result['found']) {
@@ -221,8 +212,6 @@ class ElasticSearch implements Base
     public static function buildFilter($filter)
     {
 
-        // gt,gte,lt,lte,in,!in,not,or,prefix,regexp,wildchard
-
         $operators = [];
         $operators['range'] = ['gt', 'gte', 'lt', 'lte'];
         $operators['standart'] = ['prefix', 'regexp', 'wildchard'];
@@ -230,7 +219,6 @@ class ElasticSearch implements Base
         $operators['special'] = ['in'];
 
         $filters = [];
-        $prev_key = '';
         foreach ($filter as $key => $value) {
             $is_not = '';
             if (strpos($key, '__') !== false) {
@@ -249,7 +237,6 @@ class ElasticSearch implements Base
                                 break;
                             case 'standart':
                                 $filters['must'.$is_not][] = [$type => [$key => $value]];
-
                                 break;
                             case 'BooleanQueryLevel':
                                 switch ($operator) {
@@ -270,13 +257,11 @@ class ElasticSearch implements Base
                 }
             } elseif (strpos($key, '__') === false && is_array($value)) {
                 foreach ($value as $skey => $svalue) {
-                    $sis_not = '';
                     if (strpos($skey, '__') !== false) {
                         preg_match('/__(.*?)$/i', $skey, $smatches);
                         $soperator = $smatches[1];
                         if (strpos($soperator, '!') === 0) {
                             $soperator = str_replace('!', '', $soperator);
-                            $is_not = '_not';
                         }
                         $skey = str_replace($smatches[0], '', $skey);
                         foreach ($operators as $type => $possibilities) {
@@ -305,7 +290,6 @@ class ElasticSearch implements Base
             } else {
                 $filters['must'][] = ['term' => [$key => $value]];
             }
-            $prev_key = $key;
         }
 
         return $filters;
