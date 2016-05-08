@@ -260,7 +260,7 @@ class ElasticSearch implements Base
                                 break;
                             case 'special':
                                 switch ($operator) {
-                                    case'in':
+                                    case 'in':
                                         $filters['must'.$is_not][] = ['terms' => [$key => $value]];
                                         break;
                                 }
@@ -285,12 +285,12 @@ class ElasticSearch implements Base
                                     case 'range':
                                         $filters['should'][] = ['range' => [$skey => [$soperator => $svalue]]];
                                         break;
-                                    case$filters['should'][] = [$type => [$skey => $svalue]];
-
+                                    case 'standart':
+                                        $filters['should'][] = [$type => [$skey => $svalue]];
                                         break;
                                     case 'special':
                                         switch ($soperator) {
-                                            case'in':
+                                            case 'in':
                                                 $filters['should'][] = ['terms' => [$skey => $svalue]];
                                                 break;
                                         }
