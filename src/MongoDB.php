@@ -53,9 +53,9 @@ class MongoDB implements Base
         $id = $result->getInsertedId();
         if (is_object($id)) {
             return (string) $id;
-        } else {
-            return;
         }
+        return null;
+        
     }
 
     public function get($collection, $id)
@@ -108,10 +108,9 @@ class MongoDB implements Base
             $filter['_id'] = new \MongoDB\BSON\ObjectID($filter['id']);
             unset($filter['id']);
         }
+        $filter = [];
         if ($filter != null) {
             $filter = ['$and' => self::buildFilter($filter)];
-        } else {
-            $filter = [];
         }
         $count = $collection->count($filter);
         if ($count > 0) {
@@ -152,11 +151,9 @@ class MongoDB implements Base
                 $results[] = $doc;
                 $iterator->next();
             }
-
             return ['total' => $count, 'data' => $results];
-        } else {
-            return ['total' => 0, 'data' => null];
         }
+        return ['total' => 0, 'data' => null];
     }
 
     public function query($query)

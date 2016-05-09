@@ -45,9 +45,8 @@ class ElasticSearch implements Base
             $result = $this->conn->index($params);
             if ($result['created']) {
                 return $result['_id'];
-            } else {
-                return;
             }
+            return null;
         } catch (\Exception $e) {
             return;
         }
@@ -181,25 +180,21 @@ class ElasticSearch implements Base
         if ($return['hits']['total'] == 0) {
             return ['total' => 0, 'data' => null];
         }
-        if ($limit == 1) {
+        elseif ($limit == 1) {
             $return['hits']['hits'][0][$return_type]['_id'] = $return['hits']['hits'][0]['_id'];
-
             return ['total' => 1, 'data' => $return['hits']['hits'][0][$return_type]];
-        } else {
-            $result = array();
-            foreach ($return['hits']['hits'] as $item) {
-                if ($return_type == 'fields') {
-                    foreach ($item[$return_type]as $k => $v) {
-                        $item[$return_type][$k] = $v[0];
-                    }
-                }
-                $item[$return_type]['_id'] = $item['_id'];
-
-                $result[] = $item[$return_type];
-            }
-
-            return ['total' => $count['count'], 'data' => $result];
         }
+        $result = array();
+        foreach ($return['hits']['hits'] as $item) {
+            if ($return_type == 'fields') {
+                foreach ($item[$return_type]as $k => $v) {
+                    $item[$return_type][$k] = $v[0];
+                }
+            }
+            $item[$return_type]['_id'] = $item['_id'];
+            $result[] = $item[$return_type];
+        }
+        return ['total' => $count['count'], 'data' => $result];
     }
 
     public function query($query)
