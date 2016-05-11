@@ -1,6 +1,9 @@
 <?php
 
 namespace Soupmix\Adapters;
+/*
+MongoDB Adapter
+*/
 
 class MongoDB implements Base
 {

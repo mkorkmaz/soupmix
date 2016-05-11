@@ -1,6 +1,9 @@
 <?php
 
 namespace Soupmix\Adapters;
+/*
+Elasticsearch Adapter
+*/
 
 class ElasticSearch implements Base
 {
