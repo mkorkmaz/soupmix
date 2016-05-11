@@ -6,20 +6,20 @@ class MongoDB implements Base
 {
     public $conn = null;
 
-    private $db_name = null;
+    private $dbName = null;
 
     public $db = null;
 
     public function __construct($config)
     {
-        $this->db_name = $config['db_name'];
+        $this->dbName = $config['db_name'];
         $this->connect($config);
     }
 
     public function connect($config)
     {
         $this->conn = new \MongoDB\Client($config['connection_string'], $config['options']);
-        $this->db = $this->conn->{$this->db_name};
+        $this->db = $this->conn->{$this->dbName};
     }
 
     public function create($collection, $config)

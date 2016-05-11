@@ -18,7 +18,7 @@ interface Base
 
     public function insert($collection, $values);
 
-    public function get($collection, $id);
+    public function get($collection, $docID);
 
     public function update($collection, $filter, $values);
 
