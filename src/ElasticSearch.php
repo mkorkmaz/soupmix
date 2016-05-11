@@ -77,7 +77,7 @@ class ElasticSearch implements Base
     public function update($collection, $filter, $values)
     {
         $docs = $this->find($collection, $filter, ['_id']);
-        if ($docs['total'] === 0) {
+        if ($docs['total']===0) {
             return 0;
         }
         $params = [];
@@ -89,7 +89,7 @@ class ElasticSearch implements Base
             $params['body']['doc'] = $values;
             try {
                 $return = $this->conn->update($params);
-                if ($return['_shards']['successful'] == 1) {
+                if ($return['_shards']['successful']==1) {
                     ++$modified_count;
                 }
             } catch (\Exception $e) {
@@ -121,7 +121,7 @@ class ElasticSearch implements Base
             $params['type'] = $collection;
             $params['fields'] = '_id';
             $result = $this->find('users', $filter, ['_id'], null, 0, 1);
-            if ($result['total'] == 1) {
+            if ($result['total']==1) {
                 $params = [];
                 $params['index'] = $this->index;
                 $params['type'] = $collection;
@@ -146,7 +146,7 @@ class ElasticSearch implements Base
         $params = [];
         $params['index'] = $this->index;
         $params['type'] = $collection;
-        if ($filters !== null) {
+        if ($filters!==null) {
             $filters = self::buildFilter($filters);
             $params['body'] = [
                 'query' => [
@@ -159,36 +159,36 @@ class ElasticSearch implements Base
             ];
         }
         $count = $this->conn->count($params);
-        if ($fields !== null) {
+        if ($fields!==null) {
             $params['fields'] = implode(',', $fields);
             $return_type = 'fields';
         }
-        if ($sort !== null) {
+        if ($sort!==null) {
             $params['sort'] = '';
             foreach ($sort as $sort_key => $sort_dir) {
-                if ($params['sort'] != '') {
+                if ($params['sort']!='') {
                     $params['sort'] .= ',';
                 }
                 $params['sort'] .= $sort_key.':'.$sort_dir;
             }
         }
-        if ($fields != '') {
+        if ($fields!='') {
             $params['fields'] = $fields;
             $return_type = 'fields';
         }
         $params['from'] = (int) $start;
         $params['size'] = (int) $limit;
         $return = $this->conn->search($params);
-        if ($return['hits']['total'] == 0) {
+        if ($return['hits']['total']==0) {
             return ['total' => 0, 'data' => null];
         }
-        elseif ($limit == 1) {
+        elseif ($limit==1) {
             $return['hits']['hits'][0][$return_type]['_id'] = $return['hits']['hits'][0]['_id'];
             return ['total' => 1, 'data' => $return['hits']['hits'][0][$return_type]];
         }
         $result = array();
         foreach ($return['hits']['hits'] as $item) {
-            if ($return_type == 'fields') {
+            if ($return_type=='fields') {
                 foreach ($item[$return_type]as $k => $v) {
                     $item[$return_type][$k] = $v[0];
                 }
@@ -216,10 +216,10 @@ class ElasticSearch implements Base
         $filters = [];
         foreach ($filter as $key => $value) {
             $is_not = '';
-            if (strpos($key, '__') !== false) {
+            if (strpos($key, '__')!==false) {
                 preg_match('/__(.*?)$/i', $key, $matches);
                 $operator = $matches[1];
-                if (strpos($operator, '!') === 0) {
+                if (strpos($operator, '!')===0) {
                     $operator = str_replace('!', '', $operator);
                     $is_not = '_not';
                 }
@@ -250,12 +250,12 @@ class ElasticSearch implements Base
                         }
                     }
                 }
-            } elseif (strpos($key, '__') === false && is_array($value)) {
+            } elseif (strpos($key, '__')===false && is_array($value)) {
                 foreach ($value as $skey => $svalue) {
-                    if (strpos($skey, '__') !== false) {
+                    if (strpos($skey, '__')!==false) {
                         preg_match('/__(.*?)$/i', $skey, $smatches);
                         $soperator = $smatches[1];
-                        if (strpos($soperator, '!') === 0) {
+                        if (strpos($soperator, '!')===0) {
                             $soperator = str_replace('!', '', $soperator);
                         }
                         $skey = str_replace($smatches[0], '', $skey);

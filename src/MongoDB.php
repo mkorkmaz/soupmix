@@ -69,7 +69,7 @@ class MongoDB implements Base
             'typeMap' => ['root' => 'array', 'document' => 'array'],
         ];
         $result = $collection->findOne($filter, $options);
-        if ($result !== null) {
+        if ($result!==null) {
             $result['id'] = (string) $result['_id'];
             unset($result['_id']);
         }
@@ -123,20 +123,20 @@ class MongoDB implements Base
                 'skip' => (int) $start,
                 'typeMap' => ['root' => 'array', 'document' => 'array'],
             ];
-            if ($fields !== null) {
+            if ($fields!==null) {
                 $projection = [];
                 foreach ($fields as $field) {
-                    if ($field == 'id') {
+                    if ($field=='id') {
                         $field = '_id';
                     }
                     $projection[$field] = true;
                 }
                 $options['projection'] = $projection;
             }
-            if ($sort !== null) {
+            if ($sort!==null) {
                 foreach ($sort as $sort_key => $sort_dir) {
-                    $sort[$sort_key] = ($sort_dir == 'desc') ? -1 : 1;
-                    if ($sort_key == 'id') {
+                    $sort[$sort_key] = ($sort_dir=='desc') ? -1 : 1;
+                    if ($sort_key=='id') {
                         $sort['_id'] = $sort[$sort_key];
                         unset($sort['id']);
                     }
@@ -168,7 +168,7 @@ class MongoDB implements Base
     {
         $filters = [];
         foreach ($filter as $key => $value) {
-            if (strpos($key, '__') !== false) {
+            if (strpos($key, '__')!==false) {
                 preg_match('/__(.*?)$/i', $key, $matches);
                 $operator = $matches[1];
                 switch ($operator) {
@@ -189,7 +189,7 @@ class MongoDB implements Base
                 }
                 $key = str_replace($matches[0], '', $key);
                 $filters[] = [$key => ['$'.$operator => $value]];
-            } elseif (strpos($key, '__') === false && is_array($value)) {
+            } elseif (strpos($key, '__')===false && is_array($value)) {
                 $filters[]['$or'] = self::buildFilter($value);
             } else {
                 $filters[][$key] = $value;
