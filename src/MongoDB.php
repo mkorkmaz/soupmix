@@ -50,18 +50,18 @@ class MongoDB implements Base
     {
         $collection = $this->db->selectCollection($collection);
         $result = $collection->insertOne($values);
-        $id = $result->getInsertedId();
-        if (is_object($id)) {
-            return (string) $id;
+        $docId = $result->getInsertedId();
+        if (is_object($docId)) {
+            return (string) $docId;
         }
         return null;
         
     }
 
-    public function get($collection, $id)
+    public function get($collection, $docId)
     {
         $collection = $this->db->selectCollection($collection);
-        $filter = ['_id' => new \MongoDB\BSON\ObjectID($id)];
+        $filter = ['_id' => new \MongoDB\BSON\ObjectID($docId)];
         $options = [
             'typeMap' => ['root' => 'array', 'document' => 'array'],
         ];
@@ -185,7 +185,6 @@ class MongoDB implements Base
                         break;
                 }
                 $key = str_replace($matches[0], '', $key);
-
                 $filters[] = [$key => ['$'.$operator => $value]];
             } elseif (strpos($key, '__') === false && is_array($value)) {
                 $filters[]['$or'] = self::buildFilter($value);

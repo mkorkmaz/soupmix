@@ -5,7 +5,6 @@ namespace Soupmix\Adapters;
 class ElasticSearch implements Base
 {
     public $conn = null;
-
     private $index = null;
 
     public function __construct($config)
@@ -52,12 +51,12 @@ class ElasticSearch implements Base
         }
     }
 
-    public function get($collection, $id)
+    public function get($collection, $docId)
     {
         $params = [];
         $params['index'] = $this->index;
         $params['type'] = $collection;
-        $params['id'] = $id;
+        $params['id'] = $docId;
         try {
             $result = $this->conn->get($params);
             if ($result['found']) {
@@ -284,7 +283,6 @@ class ElasticSearch implements Base
                 $filters['must'][] = ['term' => [$key => $value]];
             }
         }
-
         return $filters;
     }
 }
