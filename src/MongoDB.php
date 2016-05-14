@@ -111,11 +111,11 @@ class MongoDB implements Base
             $filter['_id'] = new \MongoDB\BSON\ObjectID($filter['id']);
             unset($filter['id']);
         }
-        $filter = [];
+        $query_filter = [];
         if ($filter != null) {
-            $filter = ['$and' => self::buildFilter($filter)];
+            $query_filter = ['$and' => self::buildFilter($filter)];
         }
-        $count = $collection->count($filter);
+        $count = $collection->count($query_filter);
         if ($count > 0) {
             $results = [];
             $options = [
