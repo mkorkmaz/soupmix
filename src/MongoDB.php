@@ -104,18 +104,18 @@ class MongoDB implements Base
         return $result->getDeletedCount();
     }
 
-    public function find($collection, $filter, $fields = null, $sort = null, $start = 0, $limit = 25, $debug = false)
+    public function find($collection, $filters, $fields = null, $sort = null, $start = 0, $limit = 25, $debug = false)
     {
         $collection = $this->db->selectCollection($collection);
-        if (isset($filter['id'])) {
-            $filter['_id'] = new \MongoDB\BSON\ObjectID($filter['id']);
-            unset($filter['id']);
+        if (isset($filters['id'])) {
+            $filters['_id'] = new \MongoDB\BSON\ObjectID($filters['id']);
+            unset($filters['id']);
         }
-        $query_filter = [];
-        if ($filter != null) {
-            $query_filter = ['$and' => self::buildFilter($filter)];
+        $query_filters = [];
+        if ($filters != null) {
+            $query_filters = ['$and' => self::buildFilter($filters)];
         }
-        $count = $collection->count($query_filter);
+        $count = $collection->count($query_filters);
         if ($count > 0) {
             $results = [];
             $options = [
@@ -143,7 +143,7 @@ class MongoDB implements Base
                 }
                 $options['sort'] = $sort;
             }
-            $cursor = $collection->find($filter, $options);
+            $cursor = $collection->find($query_filters, $options);
             $iterator = new \IteratorIterator($cursor);
             $iterator->rewind();
             while ($doc = $iterator->current()) {
